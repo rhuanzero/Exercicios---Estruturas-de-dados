@@ -1,0 +1,58 @@
+3) A seguir estão três implementações usando lógicas diferentes para realizar a tarefa de
+encontrar um elemento em um vetor ordenado. Diga qual a complexidade de cada método e
+explique como chegou a ela.
+
+
+i)
+private int retornaPosicao(int[] vetor, int desejado){
+int contador = 0;
+
+while(contador < vetor.length){ // O(N)
+	if(vetor[contador] == desejado){
+		return contador;
+		}
+	contador++;
+	}
+return Integer.MIN_VALUE;
+}
+
+R: O programa tem complexidade O(N) porque, no pior caso, ele precisa examinar cada um dos N elementos do vetor para encontrar o valor desejado ou determinar que ele não está presente.
+
+
+
+ii)
+private int retornaPosicao(int[] vetor, int desejado) {
+	for(int contador = 0; contador < vetor.length; contador++) {
+	if(vetor[contador] == desejado) {
+		return contador; 
+		}
+	}
+return Integer.MIN_VALUE; 
+}
+
+R: O programa tem complexidade O(N) porque, no pior caso, ele precisa examinar cada um dos N elementos do vetor para encontrar o valor desejado ou determinar que ele não está presente, a única diferença, é que ele utiliza um for, ao invés do while do exercício 1.
+
+
+
+
+
+iii)
+private int retornaPosicao(int[] vetor, int desejado){
+int low = 0;
+int high = vetor.length - 1;
+	while (low <= high){
+	int mid = (low + high) / 2;
+	if (vetor[mid] < desejado){
+		low = mid + 1;
+		}
+	else if (vetor[mid] > desejado){
+		high = mid - 1;
+		}
+	else if (vetor[mid] == desejado){
+		return mid;
+		}
+	}
+return Integer.MIN_VALUE;
+}
+
+R: O algoritmo acima, se trata de uma busca binária em um vetor ordenado, ou seja ele verifica se o número desejado se encontra na primeira metade ou na segunda metade e descarta uma delas, após isso ela realiza essa verificação recursivamente, diminuindo a quantidade de loopings para aproximadamente Logn, logo podemos afirmar que para o pior caso a sua complexidade é O(Logn).

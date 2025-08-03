@@ -1,0 +1,50 @@
+3) Implemente um método que, dado um int[] vetor passado como parâmetro, construa
+uma árvore binária de busca com os elementos contidos no vetor. O método deve seguir o
+seguinte protótipo:
+public void constroiArvore(int[] vetor);
+
+
+public void constroiArvore(int[] vetor) {
+		if(raiz != null) { 
+			System.out.println("Arvore já possui elementos");
+			return;
+		}
+		int n = vetor.length;
+		Integer[] vetorInteger = new Integer[n];
+		
+		for(int i = 0 ;i<n;i++) 
+			vetorInteger[i] = vetor[i];
+		
+		for(int i = 0 ;i<n;i++) {
+			Chave chave = (Chave) vetorInteger[i];
+			Valor valor = (Valor)("Valor: "+vetorInteger[i]);
+			constroiArvore(chave, valor);
+		}
+	}
+	
+	private void constroiArvore(Chave chave, Valor valor) {
+		if(chave == null)
+			return;
+		
+		raiz = constroiArvore(raiz, chave, valor);
+	}
+	
+	private No constroiArvore(No x,Chave chave, Valor valor) {
+		if(x==null)
+			return new No(chave,valor);
+		
+		int cmp = chave.compareTo(x.chave);
+		
+		if(cmp  <0) {
+			x.esq = constroiArvore(x.esq, chave, valor);
+		}
+		else if(cmp>0) {
+			x.dir = constroiArvore(x.dir, chave, valor);
+		}
+		else {
+			x.valor = valor;
+		}
+		return x;
+	}
+
+Complexidade dos métodos - O(n^2) - Sendo "n" o tamanho do vetor.

@@ -1,0 +1,33 @@
+4) Implemente um método não recursivo que verifica se uma árvore armazenada em um vetor
+de inteiros corresponde a uma Heap Máxima, isto é, se todo nó possui uma chave maior ou
+igual às chaves dos seus filhos. O método deve possuir o seguinte protótipo:
+public boolean verificaPropriedadeHeap(int[] vetor);
+
+public boolean verificaPropriedade(int[] vetor) {
+		
+		int vetoraux[] = new int[vetor.length+1];
+		int nElementos = vetor.length;
+		for(int i = 0;i<vetor.length;i++)
+			vetoraux[i+1] = vetor[i];
+		
+		for(int i = (nElementos/2); i > 0;i--) {
+			int x = vetoraux[i];
+			int filhoesq = 2*i, filhodir = (2*i)+1;
+			
+			if(filhoesq<=nElementos) {
+				if(vetoraux[filhoesq]> x)
+					return false;
+			}
+			
+			if(filhodir<=nElementos) {
+				if(vetoraux[filhodir] >x)
+					return false;
+			}
+			
+		}
+		
+		return true;
+	}
+
+Complexidade do método:
+O(logn) - sendo n a quantidade de elementos do vetor

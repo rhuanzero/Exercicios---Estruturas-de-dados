@@ -1,0 +1,29 @@
+/*2) Elabore um algoritmo que, dadas duas listas encadeadas ordenadas, intercale as duas
+listas de maneira ordenada, resultando em uma lista resultante também ordenada.*/
+
+public ListaOrdenada juntarListasOrdenadas(ListaOrdenada l2){ // EX02
+		ListaOrdenada lfinal = new ListaOrdenada();
+		Elo p1, p2;
+		p1 = this.prim;
+		p2 = l2.prim;
+
+		while ((p1 != null)) // O(n)
+		{
+			lfinal.insere(p1.dado);
+			p1 = p1.prox;
+		}
+
+		while ((p2 != null)){ // O(m)
+			lfinal.insere(p2.dado);
+			p2 = p2.prox;
+		}
+
+		if (lfinal.prim == null){
+			System.out.println("As listas estão vazias!");
+		}
+
+		return lfinal;
+}
+
+A complexidade do método é O(n+m+n+m), ou seja O(n+m)
+Sendo n = tamanho de p1, m = tamanho de p2

@@ -1,0 +1,23 @@
+3) Desenvolva um método que retorne a altura negra de uma árvore rubro-negra. A altura
+negra corresponde ao número de nós negros que são encontrados da raiz até uma folha
+qualquer. O método deve adotar o seguinte protótipo:
+
+public int alturaNegra();
+
+
+ public int alturaNegra() {
+        	return alturaNegra(root);
+       }
+        
+        public int alturaNegra(Node x) {
+        	if(x==null)
+        		return 0;
+        	
+        	if(x.color == BLACK)
+        		return 1+alturaNegra(x.left);
+        	
+        	return alturaNegra(x.left);
+        	
+        }
+
+Complexidade - O(logn) - sendo n, a quantidade de nós-negros da arvore.

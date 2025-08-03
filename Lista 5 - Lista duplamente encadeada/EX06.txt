@@ -1,0 +1,94 @@
+
+public class FilaAtendimento
+{
+    protected Elo prim;
+    int ordem = 0;
+    
+    protected class Elo
+    {
+        protected Chamada dado;
+        protected Elo ant;
+        protected Elo prox;
+
+        public Elo()
+        {
+            ant = null;
+            prox = null;
+        }
+
+        public Elo(Chamada elem)
+        {
+            dado = elem;
+            ant = null;
+            prox = null;
+        }
+
+        public Elo(Chamada elem, Elo antElem, Elo proxElem)
+        {
+            dado = elem;
+            ant = antElem;
+            prox = proxElem;
+        }
+    }
+
+    public FilaAtendimento()
+    {
+        prim = null;
+    }
+
+    public boolean vazia()
+    {
+        return prim == null;
+    }
+
+    public void adicionaChamada(int custo) {
+        Chamada novaChamada = new Chamada(custo, ordem++);
+        Elo novo = new Elo(novaChamada);
+     
+        if (prim == null || novaChamada.custo > prim.dado.custo || (novaChamada.custo == prim.dado.custo && novaChamada.ordemChegada < prim.dado.ordemChegada)) {
+            novo.prox = prim;
+            if (prim != null) {
+                prim.ant = novo;
+            }
+            prim = novo;
+        }
+        else {
+            Elo atual = prim;
+            while (atual.prox != null && (novaChamada.custo < atual.prox.dado.custo || (novaChamada.custo == atual.prox.dado.custo &&
+                    novaChamada.ordemChegada > atual.prox.dado.ordemChegada)))
+            {
+                atual = atual.prox;
+            }
+
+            novo.prox = atual.prox;
+            novo.ant = atual;
+            if (atual.prox != null) {
+                atual.prox.ant = novo;
+            }
+            atual.prox = novo;
+        }
+    }
+
+    public Chamada atendeChamada(){
+        if(prim==null) return null;
+        if(prim.prox == null){
+            Elo p = prim;
+            prim = null;
+            System.out.print(p.dado.custo);
+            return p.dado;
+        }
+        else{
+            Elo p = prim;
+            prim = prim.prox;
+            prim.ant = null;
+            System.out.print(p.dado.custo);
+            return p.dado;
+        }
+    }
+}
+
+Complexidade dos Métodos:
+atendechamada() - O(1) Pois, no pior caso, não há nenhuma estrutura de repetição
+adicionaChamada() - O(n) No pior caso será necessário percorrer a fila para posicionar a chamada no local correto.
+
+

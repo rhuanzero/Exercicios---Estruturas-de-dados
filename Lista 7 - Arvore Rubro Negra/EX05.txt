@@ -1,0 +1,130 @@
+/*5) Faça uma implementação de árvore rubro-negra que não use uma variável para armazenar
+a cor do nó. Considere o seguinte: para tornar um nó vermelho, inverta seus filhos. Assim,
+para testar se um nó é vermelho, verifique se o filho esquerdo é maior que o filho direito.*/
+import java.util.NoSuchElementException;
+
+public class ArvoreRubroNegraAlt<Key extends Comparable<Key>, Value> {
+
+    private Node root;
+
+    private class Node {
+        private Key key;
+        private Value val;
+        private Node left, right;
+
+        public Node(Key key, Value val) {
+            this.key = key;
+            this.val = val;
+        }
+    }
+
+    private boolean isRed(Node x) {
+        if (x == null || x.left == null || x.right == null) 
+            return false;
+        
+        return x.left.key.compareTo(x.right.key) > 0;
+    }
+
+    private void inverteFilhos(Node x) {
+        if (x == null) return;
+        Node aux = x.left;
+        x.left = x.right;
+        x.right = aux;
+    }
+
+    public void put(Key key, Value val) {
+        if (key == null) throw new IllegalArgumentException("A chave não pode ser nula");
+        if (val == null) {
+            return;
+        }
+        root = put(root, key, val);
+        if (isRed(root)) {
+            inverteFilhos(root);
+        }
+    }
+
+    private Node put(Node h, Key key, Value val) {
+        if (h == null) {
+            return new Node(key, val);
+        }
+
+        int cmp = key.compareTo(h.key);
+        if      (cmp < 0) h.left  = put(h.left,  key, val);
+        else if (cmp > 0) h.right = put(h.right, key, val);
+        else              h.val   = val;
+
+        if (isRed(h.right) && !isRed(h.left))      h = rotateLeft(h);
+        if (isRed(h.left)  && isRed(h.left.left)) h = rotateRight(h);
+        if (isRed(h.left)  && isRed(h.right))     flipColors(h);
+
+        return h;
+    }
+
+    private Node rotateLeft(Node h) {
+
+        Node x = h.right;
+        h.right = x.left;
+        x.left = h;
+
+        if (isRed(x) != isRed(h)) {
+            inverteFilhos(x);
+        }
+        if (!isRed(h)) {
+            inverteFilhos(h);
+        }
+
+        return x;
+    }
+
+    private Node rotateRight(Node h) {     
+        Node x = h.left;
+        h.left = x.right;
+        x.right = h;
+
+        if (isRed(x) != isRed(h)) {
+            inverteFilhos(x);
+        }
+        if (!isRed(h)) {
+            inverteFilhos(h);
+        }
+        
+        return x;
+    }
+
+    private void flipColors(Node h) {
+        inverteFilhos(h);
+        inverteFilhos(h.left);
+        inverteFilhos(h.right);
+    }
+    
+    public Value get(Key key) {
+        if (key == null) throw new IllegalArgumentException("A chave não pode ser nula");
+        Node x = root;
+        while (x != null) {
+            int cmp = key.compareTo(x.key);
+            if      (cmp < 0) x = x.left;
+            else if (cmp > 0) x = x.right;
+            else              return x.val;
+        }
+        return null;
+    }
+
+    public boolean isEmpty() {
+        return root == null;
+    }
+
+}
+
+
+
+
+
+Complexidade dos métodos:
+
+isRed - O(1)
+put - O(n)
+inverteFilhos - O(1)
+rotateLeft e rotateRight - O(1)
+flipColors - O(1)
+get - O(n)
+isEmpty - O(1)

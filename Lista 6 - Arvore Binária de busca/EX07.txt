@@ -1,0 +1,40 @@
+    /*7) Implemente um método que verifique de maneira eficiente se uma árvore binária de busca
+é balanceada, retornando true se a árvore for balanceada e false, caso contrário. Uma
+árvore é balanceada se, e somente se, para todo nó, a diferença absoluta entre as alturas
+das subárvores esquerda e direita corresponder a 0 ou a 1. Na Figura 1, são exibidas duas
+árvores binárias, em que uma é balanceada e a outra, não.
+O método a ser implementado deve possuir o protótipo abaixo:
+public boolean eBalanceada();*/
+    public boolean eBalanceada() {
+    	if(raiz == null) {
+    		return true;
+    	}
+
+    	return eBalanceada(raiz) != -2;
+    }
+    
+    private int eBalanceada(No x) {
+    	if (x==null) 
+    		return -1;
+    	
+    	int altEsq = eBalanceada(x.esq);
+    	
+    	if(altEsq == -2)
+    		return altEsq;
+    	
+    	int altDir = eBalanceada(x.dir);
+    	
+    	if(altDir == -2) 
+    		return altDir;
+    	
+    	int cmp = Math.abs(altEsq-altDir);
+    	
+    	if(cmp != 0 && cmp != 1) 
+    		return -2;
+    	
+    	return 1 + Math.max(altEsq, altDir);
+    }
+   
+
+Complexidade dos métodos - O(n) sendo n a quantidade de nós da arvore. 
+   

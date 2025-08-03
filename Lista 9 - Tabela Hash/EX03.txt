@@ -1,0 +1,7 @@
+3) A seguinte implementação do método hashCode()é legal (permitida na linguagem Java)?
+public int hashCode()
+{ return 17; }
+Caso seja legal, descreva o efeito de utilizá-la; caso contrário, explique por quê.
+
+
+R: A implementação é legal, o efeito de utiliza-la é que todos os elementos terão o mesmo hashcode, ou seja serão armazenados no mesmo bucket o que ocasionaria em varias colisões, ou seja, para chegar a um determinado elemento teria que passar por vários outros se tornando altamente ineficiente, invalidando o principio e intuito de usar a tabela hash.

@@ -1,0 +1,150 @@
+/*4) Para a classe ListaDuplamente, crie um método que troque a posição de dois elos cujas
+posições na lista são passadas como parâmetros. O protótipo do método é o seguinte:
+public void trocaElos(int indiceElo1, int indiceElo2);*/
+
+    public void trocaElos(int indiceElo1, int indiceElo2){
+        if(prim == null){return;}
+
+        if (indiceElo1 <0 || indiceElo2 <0){
+            return;
+        }
+
+        if(indiceElo1 == indiceElo2)return;
+
+        Elo p1 = encontraElo(indiceElo1, prim);
+        Elo p2 = encontraElo(indiceElo2, prim);
+
+        if(p1 == null || p2 ==null) return;
+
+        Elo antp1 = p1.ant;
+        Elo proxp1 = p1.prox;
+        Elo antp2 = p2.ant;
+        Elo proxp2 = p2.prox;
+
+
+        if(p1 != prim && p2!= prim &&(p1.prox != null && p2.prox !=null) && p1.ant !=p2 && p1.prox !=p2 && p2.ant != p1 && p2.prox != p1 ){
+            antp1.prox = p2;
+            proxp1.ant = p2;
+
+            p2.prox = proxp1;
+            p2.ant = antp1;
+
+            antp2.prox = p1;
+            proxp2.ant = p1;
+
+            p1.prox = proxp2;
+            p1.ant = antp2;
+        }
+        else if(p1 == prim && p1.prox != p2){
+           p1.prox = proxp2;
+           p1.ant = antp2;
+            if(proxp2 !=null) proxp2.ant = p1;
+           antp2.prox = p1;
+
+           p2.prox = proxp1;
+           p2.ant = null;
+
+           proxp1.ant = p2;
+           prim = p2;
+
+        }
+        else if(p2 == prim && p2.prox != p1){
+
+            p2.prox = proxp1;
+            p2.ant = antp1;
+            if(proxp1 !=null) proxp1.ant = p2;
+            antp1.prox = p2;
+
+            p1.prox = proxp2;
+            p1.ant = null;
+
+            proxp2.ant = p1;
+            prim = p1;
+        }
+        else if(p2.prox == null && p2.ant != p1){
+            antp1.prox = p2;
+            if(proxp1 != null) proxp1.ant = p2;
+
+            p2.prox = proxp1;
+            p2.ant = antp1;
+
+            p1.prox = null;
+            p1.ant = antp2;
+
+            antp2.prox = p1;
+
+        }
+        else if(p1.prox == null && p1.ant != p2){
+
+            antp2.prox = p1;
+            if(proxp2 != null) proxp2.ant = p1;
+
+            p1.prox = proxp2;
+            p1.ant = antp2;
+
+            p2.prox = null;
+            p2.ant = antp1;
+
+            antp1.prox = p2;
+
+        }
+
+        else if (p1.prox == p2){
+            if(antp1!=null) {
+                antp1.prox = p2;
+            }
+            p1.prox = proxp2;
+            p1.ant = p2;
+
+            p2.prox = p1;
+            p2.ant = antp2;
+
+            prim = p2;
+        }
+
+        else if (p2.prox == p1){
+            if(antp2!=null) {
+                antp2.prox = p1;
+            }
+            p2.prox = proxp1;
+            p2.ant = p1;
+
+            p1.prox = p2;
+            p1.ant = antp2;
+
+            prim = p1;
+        }
+
+    };
+
+    private Elo encontraElo(int indiceElo, Elo p)
+    {
+        if(p==null){
+            return null;
+        }
+        if (indiceElo<0){
+            return null;
+        }
+        return encontraEloRecursivo(p, indiceElo, 0);
+    }
+
+    private Elo encontraEloRecursivo(Elo p, int indiceElo, int i){
+        if(indiceElo == i){
+            return p;
+        }
+
+        if(p == null){
+            return null;
+        }
+
+        return encontraEloRecursivo(p.prox, indiceElo, i+1);
+    }
+
+
+
+
+
+Complexidade dos métodos:
+
+encontraEloRecursivo() - O(n) Sendo N o tamanho da lista inteira, onde no pior caso será percorrida para achar um Elo no final.
+public void trocaElos(int indiceElo1, int indiceElo2) - O(n) por conta do método encontraElo() contido, fora isso o resto do código tem complexidade O(1).

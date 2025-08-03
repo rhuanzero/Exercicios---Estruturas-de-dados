@@ -1,0 +1,41 @@
+4) Suponha que uma frase é representada por uma lista encadeada, sendo que cada elo
+contém uma string representando um token, isto é, um caracter de pontuação ou uma palavra.
+Escreva um algoritmo para retornar a frase inteira.
+
+Usei a Classe ListaGenerica feita no exercício 3 para a implementação desses métodos.
+
+	public String EX04(){
+		StringBuilder str = new StringBuilder();
+		Elo p;
+
+		for (p = prim; p!=null; p=p.prox){
+			str.append(p.dado);
+			str.append(" ");
+		}
+
+
+
+		return str.toString();
+	}
+
+	public void insereFim(T frase) {
+		Elo q = new Elo(frase);
+		if (prim == null) {
+			prim = q;
+		}
+		else {
+			Elo p = prim;
+			while (p.prox != null) {
+				p = p.prox;
+			}
+			p.prox = q;
+		}
+	}
+
+
+Complexidade dos métodos:
+EX04() - O(N*L) 
+insereFim - O(N)
+
+Sendo "L" o comprimento da String que será adicionada a lista e "N" o comprimento da lista encadeada.
+

@@ -1,0 +1,24 @@
+5) O método abaixo implementa em Java o algoritmo de ordenação Selection Sort. Mostre
+qual é a complexidade assintótica de tal método, exibindo também a conta que levou a tal
+complexidade.
+
+public void selectionSort(int vetor[], int n){
+	int i,j;
+	for (j = 0; j < n-1; j++){ // O(N)
+		int iMin = j;
+		for (i = j+1; i < n; i++){ // O(N-I)
+			if (vetor[i] < vetor[iMin]){
+				iMin = i;
+				}
+			}
+			if(iMin != j){
+				int temp = vetor[j];
+				vetor[j] = vetor[iMin];
+				vetor[iMin] = temp;
+				}
+			}
+}
+
+S = ((N-1)(1+(N-1)))/2 = ((N-1)N)/2 = (N^2-N)/2
+
+R: O(N^2)

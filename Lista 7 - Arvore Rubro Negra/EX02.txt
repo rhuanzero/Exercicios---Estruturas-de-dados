@@ -1,0 +1,26 @@
+2) Indique, para cada uma das árvores abaixo, se é ou não uma árvore rubro-negra. Justifique
+as que não forem.
+
+a. Não é Rubro-negra por conta de que a quantidade de nós pretos esta desbalanceada por conta dos casos de tratamento não aplicados.
+
+     41
+  /     \
+30(v)    77
+        /
+      50
+     /
+  43(v)
+
+b - É Rubro-negra          
+           77
+	/       \
+       50       80
+      /  \     /  \
+     13  65   79  91
+
+c - É Rubro-Negra
+	 39
+      /      \
+    21       46
+    /        /         
+   11(v)   43(v)

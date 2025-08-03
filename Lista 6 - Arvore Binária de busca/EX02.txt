@@ -1,0 +1,78 @@
+2) O método mostra() existente na classe realiza um caminhamento em pré-ordem na
+árvore para imprimir as suas chaves. Você deve adaptar esse método para realizar
+caminhamentos em pós-ordem e em ordem na árvore, imprimindo as suas chaves.
+	
+
+public void mostra()  // Ordem E, R , D 
+	{
+		mostra(raiz);
+	}
+	
+	private void mostra(No x) 
+	{
+		if(x == null)
+			return;
+		
+		System.out.print("[");
+		
+		mostra(x.esq);
+
+		System.out.print("<" + x.chave + ">");
+		
+		mostra(x.dir);
+		
+		System.out.print("]");
+	}
+
+
+public void mostraPreOrdem() // Pré - Ordem R, E, D
+{
+	mostraPreOrdem(raiz);
+}
+	
+private void mostraPreOrdem(No x)
+	{
+		if(x == null)
+			return;
+		
+		System.out.print("[");
+		
+		System.out.print("<" + x.chave + ">");
+		
+
+		mostraPreOrdem(x.esq);
+		
+
+		mostraPreOrdem(x.dir);
+		
+		System.out.print("]");
+	}
+	
+public void mostraPosOrdem() // Pós-Ordem E, D, R
+{
+	mostraPosOrdem(raiz);
+}
+	
+private void mostraPosOrdem(No x)
+	{
+
+		if(x == null)
+			return;
+		
+		System.out.print("[");
+		
+
+		mostraPosOrdem(x.esq);
+		
+	
+		mostraPosOrdem(x.dir);
+		
+
+		System.out.print("<" + x.chave + ">");
+		
+		System.out.print("]");
+	}
+
+
+
+Complexidade dos métodos: O(n) - Sendo n o numero total de nós da arvore.

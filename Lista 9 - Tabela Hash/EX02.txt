@@ -1,0 +1,58 @@
+/*2) Desenvolva um programa que encontre os valores de a e M, com M tão pequeno quanto
+possível, de tal forma que a função (a * k) % M para transformar a k-ésima letra do alfabeto
+em um índice da tabela produza valores distintos para cada k (isto é, em que não ocorram
+colisões) para as chaves S E A R C H X M P L. Uma função que possua tal propriedade é
+conhecida como função de hash perfeita.*/
+
+
+
+    public static void main(String[] args) {
+        String entrada = "SEARCHXMPL";
+        int n = entrada.length();
+        boolean encontrou = false;
+        int M = n;
+        int aEncontrado = 0;
+        int MEncontrado = 0;
+
+        while (!encontrou) {
+            for (int a = 1; a <= 1000; a++) {
+                if (ehUnico(a, M, entrada)) {
+                    encontrou = true;
+                    aEncontrado = a;
+                    MEncontrado = M;
+                    break;
+                }
+            }
+            if (!encontrou) {
+                M++;
+            }
+        }
+        
+
+        SeparateChainingHashST<Character, Integer> st = new SeparateChainingHashST<>(MEncontrado);
+        
+ 
+        for (char c : entrada.toCharArray()) {
+            int k = c - 'A' + 1;
+            int hash = (aEncontrado * k) % MEncontrado;
+            if (hash < 0) hash += MEncontrado;
+            st.put(c, hash);
+        }
+        
+        st.imprime();
+    }
+
+    private static boolean ehUnico(int a, int M, String chaves) {
+        if (M <= 0) return false;
+        boolean[] hashVetor = new boolean[M];
+        for (int i = 0; i < chaves.length(); i++) {
+            char c = chaves.charAt(i);
+            int k = c - 'A' + 1;
+            int hash = (a * k) % M;
+            if (hash < 0) hash += M;
+            if (hashVetor[hash]) 
+                return false;
+            hashVetor[hash] = true;
+        }
+        return true;
+    }

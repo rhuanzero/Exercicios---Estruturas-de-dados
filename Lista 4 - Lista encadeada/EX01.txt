@@ -1,0 +1,52 @@
+1) Qual a complexidade do método tamanho() presente na classe Lista disponibilizada?
+É possível melhorá-lo? Caso seja possível, faça as alterações necessárias para tal e diga a
+complexidade do novo método. Você tem liberdade para criar novos métodos e atributos,
+assim como modificar métodos e atributos já existentes na classe.
+
+O metodo tamanho() tem complexidade O(n) por conta que precisa percorrer a lista completa para obter o tamanho.
+
+
+
+Atributo adicionado a classe Lista:
+protected int tam = 0;
+
+Metodos modificados:
+	public int tamanho(){
+		return tam;
+	}
+
+	public boolean remove(int elem)
+	{
+		Elo p;
+		Elo ant = null; /* Refer�ncia para anterior. */
+
+		for(p = prim; ((p != null) && (p.dado != elem)); p = p.prox)
+			ant = p;
+
+		/* Se p � null, ent�o n�o encontrou elemento. */
+		if (p == null)
+			return false;
+
+		if (p == prim)
+			prim = prim.prox; /* Remove elemento do in�cio. */
+		else
+			ant.prox = p.prox;  /* Remove elemento do meio. */
+
+		/* Remove a �ltima refer�ncia para o elo a ser removido. Dessa forma,
+		 * o Garbage Collector ir� liberar essa mem�ria. */
+		p = null;
+
+		tam--; // Adicionado para o EX01
+		return true;
+	}
+
+	public void insere(int novo)
+	{
+		Elo p = new Elo(novo);
+		p.prox = prim;
+		prim = p;
+		tam++; // Adicionado para o EX01
+	}
+
+Após a alteração dos metodos e ao adicionar o atributo tam, agora o custo para se obter o tamanho da lista, se tornou O(1)
+

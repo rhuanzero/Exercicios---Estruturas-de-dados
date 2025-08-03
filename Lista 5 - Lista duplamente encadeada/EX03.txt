@@ -1,0 +1,49 @@
+ /*3) Implemente um método que inverta a ordem de uma lista circular e retorne a lista invertida.
+    O protótipo do método é o seguinte:*/
+
+    public ListaCircular inverteLista(){
+        if (prim == null) return null;
+        ListaCircular lf = new ListaCircular();
+        boolean primeiravez = true;
+        Elo p = encontrarAnt(prim,prim);
+        Elo ult = null;
+
+
+        do{
+            Elo ant = encontrarAnt(p,p);
+            Elo novo = new Elo(p.dado);
+            if(primeiravez){
+                lf.prim = novo;
+                novo.prox = lf.prim;
+                ult = lf.prim;
+                primeiravez = false;
+            }
+            else{
+                ult.prox = novo;
+                novo.prox = lf.prim;
+                ult = novo;
+                if(ant == prim){
+                    ult.prox = ant;
+                    ant.prox = lf.prim;
+                }
+            }
+            p = ant;
+        }while(p!=prim);
+
+        return lf;
+    };
+
+    private Elo encontrarAnt(Elo p, Elo q){
+        if (p.prox == q){
+            return p;
+        }
+        return encontrarAnt(p.prox, q);
+    }
+
+
+
+
+
+Complexidade dos métodos:
+encontrarAnt() - O(n) - No pior caso, o método terá que percorrer o comprimento da lista completo ate achar o Elo desejado.
+inverteLista() - O(n^2) - No pior caso, o método deverá percorrer o comprimento completo lista no while, que contem o método encontrarAnt, tornado ele O(n^2)

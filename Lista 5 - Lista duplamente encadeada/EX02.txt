@@ -1,0 +1,100 @@
+/*2) Para a classe Lista Circular, crie um método para concatenar alternadamente
+elementos da lista corrente, para a qual o método é chamado, com a lista lista2 recebida
+como parâmetro. O resultado da operação deve ser colocado em uma terceira lista que será
+retornada. O protótipo do método é o seguinte:
+public ListaCircular merge(ListaCircular lista2);*/
+
+    public ListaCircular merge(ListaCircular l2){
+        ListaCircular l3 = new ListaCircular();
+        Elo p1 = prim; // Elementos para percorrer
+        Elo p2 = l2.prim;
+        Elo ult = l3.prim; // Ultimo elemento de l3
+        if(p1 == null && p2 ==null) return l3;
+
+
+        if(p1==null){
+            Elo atual = p2;
+            do{
+                Elo novo = new Elo(atual.dado);
+                if(l3.prim == null){
+                    l3.prim = novo;
+                    novo.prox = l3.prim;
+                    ult = l3.prim;
+                }
+                else{
+                    ult.prox = novo;
+                    novo.prox = l3.prim;
+                    ult = ult.prox;
+                }
+                atual = atual.prox;
+            }while(atual != l2.prim);
+            return l3;
+        }
+
+        if(p2==null){
+            Elo atual = p1;
+            do{
+                Elo novo = new Elo(atual.dado);
+                if(l3.prim == null){
+                    l3.prim = novo;
+                    novo.prox = l3.prim;
+                    ult = l3.prim;
+                }
+                else{
+                    ult.prox = novo;
+                    novo.prox = l3.prim;
+                    ult = ult.prox;
+                }
+                atual = atual.prox;
+            }while(atual != prim);
+            return l3;
+        }
+        boolean fim1 = false;
+        boolean fim2 = false;
+
+        while(!(fim1 && fim2)){
+            if(!fim1){
+                Elo novo = new Elo(p1.dado);
+                if(l3.prim == null) {
+                    l3.prim = novo;
+                    novo.prox = l3.prim;
+                    ult = l3.prim;
+                }
+                else{
+                    ult.prox = novo;
+                    novo.prox = l3.prim;
+                    ult = ult.prox;
+                }
+                p1 = p1.prox;
+                if(p1 == prim){
+                    fim1 = true;
+                }
+            }
+
+            if(!fim2){
+                Elo novo = new Elo(p2.dado);
+                if(l3.prim == null) {
+                    l3.prim = novo;
+                    novo.prox = l3.prim;
+                    ult = l3.prim;
+                }
+                else{
+                    ult.prox = novo;
+                    novo.prox = l3.prim;
+                    ult = ult.prox;
+                }
+                p2 = p2.prox;
+                if(p2 == l2.prim){
+                    fim2 = true;
+                }
+            }
+
+
+        }
+
+       return l3;
+
+    }
+
+
+Complexidade do método: O(n) - Sendo N o tamanho da maior lista, que será percorrida completamente por conta de que os dois percorrem juntos na estrutura de repetição while.

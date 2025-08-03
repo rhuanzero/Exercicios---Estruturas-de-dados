@@ -1,0 +1,151 @@
+5) Modifique a classe SeparateChainingHashST para usar uma segunda função de hash
+e escolher a menor das duas listas obtidas ao se aplicarem ambas as funções para uma
+determinada chave. Mostre o processo de inserir as chaves E A S Y Q U T I O N, nessa
+ordem, em uma tabela inicialmente vazia de tamanho M = 3, usando a função (11 * k) % M
+como a primeira função de hash e a função (17 * k) % M como a segunda função de hash,
+ambas para a k-ésima letra. Forneça o número médio de comparações ao realizar uma busca
+bem sucedida.
+
+
+public class SeparateChainingHashSTMOD<Key, Value> {
+    private static final int INIT_CAPACITY = 4;
+    private int n;                                // number of key-value pairs
+    private int m;                                // hash table size
+    private SequentialSearchST<Key, Value>[] st;  // array of linked-list symbol tables
+
+    public SeparateChainingHashSTMOD() {
+        this(INIT_CAPACITY);
+    }
+
+    public SeparateChainingHashSTMOD(int m) {
+        this.m = m;
+        st = (SequentialSearchST<Key, Value>[]) new SequentialSearchST[m];
+        for (int i = 0; i < m; i++) {
+            st[i] = new SequentialSearchST<>();
+        }
+    }
+
+ 
+    private int hash1(Key key) {
+        if (key instanceof Character) {
+            char c = (Character) key;
+            int k = Character.toUpperCase(c) - 'A' + 1;
+            return (11 * k) % m;
+        }
+        return (key.hashCode() & 0x7fffffff) % m;
+    }
+
+  
+    private int hash2(Key key) {
+        if (key instanceof Character) {
+            char c = (Character) key;
+            int k = Character.toUpperCase(c) - 'A' + 1;
+            return (17 * k) % m;
+        }
+        return (key.hashCode() * 17 & 0x7fffffff) % m;
+    }
+
+    public double put(Key key, Value val) {
+        if (key == null) throw new IllegalArgumentException("Key cannot be null");
+        if (val == null) {
+            delete(key);
+            return Double.MIN_VALUE;
+        }
+
+        int h1 = hash1(key);
+        int h2 = hash2(key);
+    
+        int chosenIndex = (st[h1].size() <= st[h2].size()) ? h1 : h2;
+        
+        if (!st[chosenIndex].contains(key)) n++;
+        st[chosenIndex].put(key, val);
+        return averageComparisons();
+    }
+
+    public Value get(Key key) {
+        if (key == null) throw new IllegalArgumentException("Key cannot be null");
+        int h1 = hash1(key);
+        int h2 = hash2(key);
+        
+    
+        Value val = st[h1].get(key);
+        if (val != null) return val;
+        return st[h2].get(key);
+    }
+
+    public void delete(Key key) {
+        if (key == null) throw new IllegalArgumentException("Key cannot be null");
+        
+        int h1 = hash1(key);
+        int h2 = hash2(key);
+        
+     
+        boolean deleted = false;
+        if (st[h1].contains(key)) {
+            st[h1].delete(key);
+            deleted = true;
+        }
+        else if (st[h2].contains(key)) {
+            st[h2].delete(key);
+            deleted = true;
+        }
+        
+        if (deleted) n--;
+    }
+
+    public boolean contains(Key key) {
+        return get(key) != null;
+    }
+
+    public boolean isEmpty() {
+        return n == 0;
+    }
+
+    public int size() {
+        return n;
+    }
+
+   
+    public double averageComparisons() {
+        if (n == 0) return 0;
+        
+        int totalComparisons = 0;
+        for (int i = 0; i < m; i++) {
+            int position = 1;
+            for (Key key : st[i].keys()) {
+                totalComparisons += position;
+                position++;
+            }
+        }
+        return (double) totalComparisons / n;
+    }
+
+    public void display() {
+        for (int i = 0; i < m; i++) {
+            System.out.print(i + ": ");
+            if (st[i].isEmpty()) {
+                System.out.println("null");
+            } else {
+                for (Key key : st[i].keys()) {
+                    System.out.print(key + " → ");
+                }
+                System.out.println("null");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        int M = 3;
+        SeparateChainingHashSTMOD<Character, Integer> st = new SeparateChainingHashSTMOD<>(M);
+        String keys = "EASYQUTION";
+        
+        System.out.println("Processo de Inserção:");
+        for (char c : keys.toCharArray()) {
+            st.put(c, 0);
+            System.out.println("\nApós inserir '" + c + "':");
+            st.display();
+        }
+        
+        System.out.println("\nNúmero médio de comparações: " + st.averageComparisons());
+    }
+}

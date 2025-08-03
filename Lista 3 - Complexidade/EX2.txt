@@ -1,0 +1,15 @@
+2) Assuma que cada uma das expressões abaixo represente o tempo de processamento T(n) gasto por um algoritmo para resolver um problema cuja entrada possui tamanho n. Diga o termo dominante e a complexidade justa Big-Oh em cada expressão.
+
+	Expressão		    Termo dominante         O()
+5 + 0.001n5 + 0.025n                0.001n^5                O(n^5)
+500n + 100n0.5 + 50nlog10n          50nlog10n               O(nLogn)
+0.3n + 5n^1.5 + 2.5 n^1.75          2.5 n^1.75              O(n^1.75)
+n^2 log2n + n(log2n)^2              n^2 log2n               O(n^2Logn)
+n log3 n + n log2 n                 n log2n                 O(nLogn)      
+3 log8 n + log2 log2 log2 n         3log8n                  O (Logn)
+100n + 0.01n^2		            0.01n^2                 O(n^2)
+0.01n + 100n^2		            100n^2	            O(n^2)
+2n + n^0.5 + 0.5n^1.25              0.5n^1.25               O(n^1.25)
+0.01nlog2n + n(log2 n)^2            n(log2n)^2              O(n(Logn)^2)
+100n log3 n + n 3 + 100n            n^3                     O(n^3)
+0.003 log4 n + log2 log2 n          0.003log4n              O(Logn)

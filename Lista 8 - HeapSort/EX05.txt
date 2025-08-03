@@ -1,0 +1,73 @@
+/*5) Implemente um método que remova e retorne o elemento na i-ésima posição do vetor
+representativo de uma Heap Máxima. O protótipo a ser seguido está abaixo:
+public boolean remove(int i);*/
+	
+	public boolean remove(int i) {
+		if(!this.vazia()&& i<=n) {
+			if(n == i) {
+				n--;
+				return true;
+			}
+			
+			vetor[i] = vetor[n];
+			n--;
+			if(!sobe(i)) 
+				refaz(i);
+		
+			return true;
+		
+	}
+		return false;
+	}
+	
+	private boolean sobe(int i) {
+	    int posOriginal = i;
+	    int posAtual = i;
+	    int elemento = vetor[posAtual];
+	    
+	    
+	    while (posAtual > 1 && elemento > vetor[posAtual / 2]) {
+
+	        vetor[posAtual] = vetor[posAtual / 2]; 
+
+	        posAtual /= 2;
+	    }
+	    
+	    vetor[posAtual] = elemento;
+	    
+	    return posAtual != posOriginal;
+	}
+
+
+private void refaz(int i)
+	{
+		int x = vetor[ i ];
+
+		while(2*i <= n)
+		{
+			int filhoEsq, filhoDir, maiorFilho;
+			
+			filhoEsq = 2*i;
+			filhoDir = 2*i + 1;
+			
+			maiorFilho = filhoEsq;
+			
+			if(filhoDir <= n)
+			{
+				if(vetor[ filhoDir ] > vetor[ filhoEsq ])
+					maiorFilho = filhoDir;
+			}
+
+			if(vetor[ maiorFilho ] > x)
+				vetor [ i ] = vetor[ maiorFilho ];
+			else
+				break;
+			i = maiorFilho;
+		}
+		
+		vetor[ i ] = x;
+	}
+
+
+
+complexidade - O(logn) - Sendo n o numero de elementos da heap

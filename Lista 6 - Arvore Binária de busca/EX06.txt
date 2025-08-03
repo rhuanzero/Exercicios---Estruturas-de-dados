@@ -1,0 +1,37 @@
+    /*6) Implemente um método que, dados dois nós No primeiroNo e No segundoNo passados
+como parâmetro, encontre o menor ancestral comum entre esses dois nós da árvore binária
+de busca. O menor ancestral comum entre esses dois dados nós é aquele de nível mais baixo
+que tenha ambos primeiroNo e segundoNo como descendentes. Você deve implementar
+o método com a melhor complexidade possível e deve adotar o protótipo abaixo:
+public No obtemAncestralComum(No primeiroNo, No segundoNo);
+*/
+
+
+    public No obtemAncestralComum(No primeiroNo, No segundoNo) {
+    	if(primeiroNo == null || segundoNo == null) {
+    		throw new IllegalArgumentException("Insira nós válidos!");
+    	}
+    	
+    	
+    	return obtemAncestralComum(raiz,primeiroNo,segundoNo);
+    }
+    
+    private No obtemAncestralComum(No ancestral,No n1, No n2) {
+    	if(ancestral == null)
+    		return null;
+    	
+    	
+    	if(n1.chave.compareTo(ancestral.chave) < 0 && n2.chave.compareTo(ancestral.chave) < 0) {
+    		return obtemAncestralComum(ancestral.esq,n1,n2);
+    	}
+    	
+    	if(n1.chave.compareTo(ancestral.chave) > 0 && n2.chave.compareTo(ancestral.chave) > 0) {
+    		return obtemAncestralComum(ancestral.dir,n1,n2);
+    	}
+
+    	return ancestral;
+
+    }
+    
+
+Complexidade - O(h) - sendo h a altura da arvore.

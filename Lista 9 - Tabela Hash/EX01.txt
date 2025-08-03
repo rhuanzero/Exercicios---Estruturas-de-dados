@@ -1,0 +1,24 @@
+1) Insira as chaves E A S Y Q U T I O N, nessa ordem, em uma tabela inicialmente vazia de
+M = 5 listas, utilizando o método Separate Chaining. Utilize uma função de hash (11 * k) % M
+para transformar a k-ésima letra do alfabeto em um índice da tabela.
+
+   public static void main(String[] args) {
+    	
+        SeparateChainingHashST<Character, Integer> st = new SeparateChainingHashST<Character, Integer>(5);
+        String entrada = "EASYQUTION";
+      
+        for(char c : entrada.toCharArray()) {
+        	st.put(c, 5);
+        }
+    }
+
+Método adaptado da classe:
+
+    private int hash(Key key) {
+        if (key instanceof Character) {
+            char c = (Character) key;
+            int k = Character.toUpperCase(c) - 'A' + 1; 
+            return (11 * k) % m;
+        }
+        return (key.hashCode() & 0x7fffffff) % m; 
+    }

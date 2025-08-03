@@ -1,0 +1,543 @@
+
+public class Arv2_3No<Chave extends Comparable<Chave>, Valor> {
+    private NoBase raiz;
+
+    // Classe base abstrata para os nós
+    private abstract class NoBase {}
+
+    // Nó com 2 filhos (binário)
+    private final class No2 extends NoBase {
+        Chave chave;
+        Valor valor;
+        NoBase esq, dir;
+
+        public No2(Chave chave, Valor valor) {
+            this.chave = chave;
+            this.valor = valor;
+            this.esq = null;
+            this.dir = null;
+        }
+
+        public No2(Chave chave, Valor valor, NoBase esq, NoBase dir) {
+            this.chave = chave;
+            this.valor = valor;
+            this.esq = esq;
+            this.dir = dir;
+        }
+    }
+
+    // Nó com 3 filhos (ternário)
+    private final class No3 extends NoBase {
+        Chave chave1, chave2;
+        Valor valor1, valor2;
+        NoBase esq, meio, dir;
+
+        public No3(Chave chave1, Valor valor1, Chave chave2, Valor valor2) {
+            this.chave1 = chave1;
+            this.valor1 = valor1;
+            this.chave2 = chave2;
+            this.valor2 = valor2;
+            this.esq = null;
+            this.meio = null;
+            this.dir = null;
+        }
+
+        // Construtor corrigido com filhos
+        public No3(Chave chave1, Valor valor1, Chave chave2, Valor valor2, 
+                   NoBase esq, NoBase meio, NoBase dir) {
+            this.chave1 = chave1;
+            this.valor1 = valor1;
+            this.chave2 = chave2;
+            this.valor2 = valor2;
+            this.esq = esq;
+            this.meio = meio;
+            this.dir = dir;
+        }
+
+    }
+
+    // Construtor
+    public Arv2_3No() {
+        raiz = null;
+    }
+
+    // Verifica se a árvore está vazia
+    public boolean vazia() {
+        return raiz == null;
+    }
+
+    // Busca um valor na árvore
+    public Valor get(Chave chave) {
+        if (chave == null) 
+            throw new IllegalArgumentException("Chave não pode ser null");
+        return get(raiz, chave);
+    }
+
+    private Valor get(NoBase no, Chave chave) {
+        if (no == null) 
+            return null;
+
+        if (no instanceof No2) {
+            No2 n = (No2) no;
+            int cmp = chave.compareTo(n.chave);
+            if (cmp < 0) 
+                return get(n.esq, chave);
+            else if (cmp > 0) 
+                return get(n.dir, chave);
+            else 
+                return n.valor;
+        } 
+        else { // No3
+            No3 n = (No3) no;
+            int cmp1 = chave.compareTo(n.chave1);
+            int cmp2 = chave.compareTo(n.chave2);
+            
+            if (cmp1 < 0) 
+                return get(n.esq, chave);
+            else if (cmp1 == 0) 
+                return n.valor1;
+            else if (cmp2 < 0) 
+                return get(n.meio, chave);
+            else if (cmp2 == 0) 
+                return n.valor2;
+            else 
+                return get(n.dir, chave);
+        }
+    }
+
+    // Insere um par chave-valor na árvore
+    public void put(Chave chave, Valor valor) {
+        if (chave == null) 
+            throw new IllegalArgumentException("Chave não pode ser null");
+        
+        if (valor == null) {
+            // Implementar remoção se necessário
+            return;
+        }
+        
+        ResultadoInsercao resultado = put(raiz, chave, valor);
+        if (resultado.houveDivisao()) {
+            raiz = new No2(
+                resultado.chaveMedia, 
+                resultado.valorMedia,
+                resultado.noEsquerda, 
+                resultado.noDireita
+            );
+        } else {
+            raiz = resultado.no;
+        }
+    }
+
+    // Classe auxiliar para resultados da inserção
+    private class ResultadoInsercao {
+        NoBase no;
+        Chave chaveMedia;
+        Valor valorMedia;
+        NoBase noEsquerda;
+        NoBase noDireita;
+        boolean divisao;
+
+        // Construtor sem divisão
+        ResultadoInsercao(NoBase no) {
+            this.no = no;
+            this.divisao = false;
+        }
+
+        // Construtor com divisão
+        ResultadoInsercao(NoBase noEsquerda, Chave chaveMedia, Valor valorMedia, NoBase noDireita) {
+            this.noEsquerda = noEsquerda;
+            this.chaveMedia = chaveMedia;
+            this.valorMedia = valorMedia;
+            this.noDireita = noDireita;
+            this.divisao = true;
+        }
+
+        boolean houveDivisao() {
+            return divisao;
+        }
+    }
+
+    private ResultadoInsercao put(NoBase no, Chave chave, Valor valor) {
+        if (no == null) {
+            return new ResultadoInsercao(new No2(chave, valor));
+        }
+
+        if (no instanceof No2) {
+            No2 n = (No2) no;
+            int cmp = chave.compareTo(n.chave);
+
+            if (cmp == 0) {
+                n.valor = valor;
+                return new ResultadoInsercao(n);
+            }
+
+            ResultadoInsercao res;
+            if (cmp < 0) {
+                res = put(n.esq, chave, valor);
+                if (!res.houveDivisao()) {
+                    n.esq = res.no;
+                    return new ResultadoInsercao(n);
+                } else {
+                    // Transformar nó2 em nó3 com divisão
+                    return new ResultadoInsercao(
+                        new No3(
+                            res.chaveMedia, res.valorMedia,
+                            n.chave, n.valor,
+                            res.noEsquerda, res.noDireita, n.dir
+                        )
+                    );
+                }
+            } else {
+                res = put(n.dir, chave, valor);
+                if (!res.houveDivisao()) {
+                    n.dir = res.no;
+                    return new ResultadoInsercao(n);
+                } else {
+                    // Transformar nó2 em nó3 com divisão
+                    return new ResultadoInsercao(
+                        new No3(
+                            n.chave, n.valor,
+                            res.chaveMedia, res.valorMedia,
+                            n.esq, res.noEsquerda, res.noDireita
+                        )
+                    );
+                }
+            }
+        } 
+        else { // No3
+            No3 n = (No3) no;
+            int cmp1 = chave.compareTo(n.chave1);
+            int cmp2 = chave.compareTo(n.chave2);
+
+            if (cmp1 == 0) {
+                n.valor1 = valor;
+                return new ResultadoInsercao(n);
+            } else if (cmp2 == 0) {
+                n.valor2 = valor;
+                return new ResultadoInsercao(n);
+            }
+
+            ResultadoInsercao res;
+            if (cmp1 < 0) {
+                res = put(n.esq, chave, valor);
+                if (!res.houveDivisao()) {
+                    n.esq = res.no;
+                    return new ResultadoInsercao(n);
+                } else {
+                    // Dividir nó3
+                    return new ResultadoInsercao(
+                        new No2(res.chaveMedia, res.valorMedia, res.noEsquerda, res.noDireita),
+                        n.chave1, n.valor1,
+                        new No2(n.chave2,n.valor2, n.meio, n.dir)
+                    );
+                }
+            } else if (cmp2 < 0) {
+                res = put(n.meio, chave, valor);
+                if (!res.houveDivisao()) {
+                    n.meio = res.no;
+                    return new ResultadoInsercao(n);
+                } else {
+                    // Dividir nó3
+                    return new ResultadoInsercao(
+                        new No2(n.chave1, n.valor1, n.esq, res.noEsquerda),
+                        res.chaveMedia, res.valorMedia,
+                        new No2(n.chave2, n.valor2, res.noDireita, n.dir)
+                    );
+                }
+            } else {
+                res = put(n.dir, chave, valor);
+                if (!res.houveDivisao()) {
+                    n.dir = res.no;
+                    return new ResultadoInsercao(n);
+                } else {
+                    // Dividir nó3
+                    return new ResultadoInsercao(
+                        new No2(n.chave1, n.valor1, n.esq, n.meio),
+                        n.chave2, n.valor2,
+                        new No2(res.chaveMedia, res.valorMedia, res.noEsquerda, res.noDireita)
+                    );
+                }
+            }
+        }
+    }
+
+    // Método para calcular a altura da árvore
+    public int altura() {
+        return altura(raiz);
+    }
+
+    private int altura(NoBase no) {
+        if (no == null) 
+            return -1;
+
+        if (no instanceof No2) {
+            No2 n = (No2) no;
+            return 1 + Math.max(altura(n.esq), altura(n.dir));
+        } else {
+            No3 n = (No3) no;
+            return 1 + Math.max(Math.max(altura(n.esq), altura(n.meio)), altura(n.dir));
+        }
+    }
+
+    // Método para mostrar as chaves em ordem
+    public void mostra() {
+    	mostra(raiz);
+        System.out.println();
+    }
+
+    private void mostra(NoBase no) {
+        if (no == null) {
+            System.out.print("[]");
+            return;
+        }
+        
+        System.out.print("["); 
+
+        if (no instanceof No2) {
+            No2 n = (No2) no;
+        
+            mostra(n.esq);
+            
+    
+            System.out.print("<" + n.chave + ">");
+            
+            
+            mostra(n.dir);
+        } else { // No3
+            No3 n = (No3) no;
+            
+            mostra(n.esq);
+            
+      
+            System.out.print("<" + n.chave1 + ">");
+            
+   
+            mostra(n.meio);
+            
+   
+            System.out.print("<" + n.chave2 + ">");
+            
+           
+            mostra(n.dir);
+        }
+        
+        System.out.print("]"); 
+    }
+   
+  public void delete(Chave chave) {
+    if (chave == null) 
+        throw new IllegalArgumentException("Chave não pode ser null");
+    raiz = delete(raiz, chave);
+    if (raiz != null && raiz instanceof No2 && ((No2) raiz).chave == null) {
+        raiz = null;
+    }
+}
+
+private NoBase delete(NoBase no, Chave chave) {
+    if (no == null) return null;
+
+    if (no instanceof No2) {
+        return deleteNo2((No2) no, chave);
+    } else {
+        return deleteNo3((No3) no, chave);
+    }
+}
+
+private NoBase deleteNo2(No2 no, Chave chave) {
+    int cmp = chave.compareTo(no.chave);
+    
+    if (cmp == 0) {
+        // Caso 1: Chave encontrada em nó folha
+        if (no.esq == null && no.dir == null) {
+            return null; // Remove o nó
+        }
+        
+        // Caso 2: Chave encontrada em nó interno
+        if (no.dir != null) {
+            NoBase sucessor = getMinNode(no.dir);
+            if (sucessor instanceof No2) {
+                No2 minNo = (No2) sucessor;
+                no.chave = minNo.chave;
+                no.valor = minNo.valor;
+                no.dir = delete(no.dir, no.chave);
+            } else {
+                No3 minNo = (No3) sucessor;
+                no.chave = minNo.chave1;
+                no.valor = minNo.valor1;
+                no.dir = delete(no.dir, no.chave);
+            }
+        }
+        return no;
+    } else if (cmp < 0) {
+        // Buscar na subárvore esquerda
+        no.esq = delete(no.esq, chave);
+        return balancear(no);
+    } else {
+        // Buscar na subárvore direita
+        no.dir = delete(no.dir, chave);
+        return balancear(no);
+    }
+}
+
+private NoBase deleteNo3(No3 no, Chave chave) {
+    int cmp1 = chave.compareTo(no.chave1);
+    int cmp2 = chave.compareTo(no.chave2);
+    
+    if (cmp1 == 0 || cmp2 == 0) {
+        // Chave encontrada
+        if (no.esq == null && no.meio == null && no.dir == null) {
+            // Caso 1: Folha - transforma em nó 2
+            if (cmp1 == 0) {
+                return new No2(no.chave2, no.valor2);
+            } else {
+                return new No2(no.chave1, no.valor1);
+            }
+        }
+        
+        // Caso 2: Nó interno
+        if (cmp1 == 0) {
+            NoBase sucessor = getMinNode(no.meio);
+            if (sucessor instanceof No2) {
+                No2 minNo = (No2) sucessor;
+                no.chave1 = minNo.chave;
+                no.valor1 = minNo.valor;
+                no.meio = delete(no.meio, no.chave1);
+            } else {
+                No3 minNo = (No3) sucessor;
+                no.chave1 = minNo.chave1;
+                no.valor1 = minNo.valor1;
+                no.meio = delete(no.meio, no.chave1);
+            }
+        } else {
+            NoBase sucessor = getMinNode(no.dir);
+            if (sucessor instanceof No2) {
+                No2 minNo = (No2) sucessor;
+                no.chave2 = minNo.chave;
+                no.valor2 = minNo.valor;
+                no.dir = delete(no.dir, no.chave2);
+            } else {
+                No3 minNo = (No3) sucessor;
+                no.chave2 = minNo.chave1;
+                no.valor2 = minNo.valor1;
+                no.dir = delete(no.dir, no.chave2);
+            }
+        }
+        return no;
+    } else if (chave.compareTo(no.chave1) < 0) {
+        no.esq = delete(no.esq, chave);
+        return balancear(no);
+    } else if (chave.compareTo(no.chave2) < 0) {
+        no.meio = delete(no.meio, chave);
+        return balancear(no);
+    } else {
+        no.dir = delete(no.dir, chave);
+        return balancear(no);
+    }
+}
+
+private NoBase balancear(NoBase no) {
+    if (no == null) return null;
+    
+    if (no instanceof No2) {
+        No2 n = (No2) no;
+        if (n.esq == null && n.dir == null) {
+            return no; // Nó folha não precisa de balanceamento
+        }
+        
+        // Verificar underflow nos filhos
+        if (n.esq == null) {
+            return n.dir;
+        } else if (n.dir == null) {
+            return n.esq;
+        }
+    } else {
+        No3 n = (No3) no;
+        // Verificar underflow nos filhos
+        if (n.esq == null) {
+            if (n.meio instanceof No3) {
+                // Redistribuir com irmão
+                No3 meio = (No3) n.meio;
+                return new No3(
+                    n.chave1, n.valor1,
+                    meio.chave1, meio.valor1,
+                    new No2(meio.chave2, meio.valor2, meio.esq, meio.meio),
+                    meio.dir
+                );
+            } else {
+                // Fusão
+                No2 meio = (No2) n.meio;
+                return new No2(
+                    n.chave1, n.valor1,
+                    new No3(meio.chave, meio.valor, n.chave2, n.valor2, meio.esq, meio.dir, n.dir),
+                    null
+                );
+            }
+        } else if (n.meio == null) {
+            if (n.esq instanceof No3) {
+                No3 esq = (No3) n.esq;
+                return new No3(
+                    esq.chave2, esq.valor2,
+                    n.chave1, n.valor1,
+                    esq.dir,
+                    new No2(n.chave2, n.valor2, n.dir, null),
+                    null
+                );
+            } else {
+                No2 esq = (No2) n.esq;
+                return new No2(
+                    n.chave1, n.valor1,
+                    new No3(esq.chave, esq.valor, n.chave2, n.valor2, esq.esq, esq.dir, n.dir),
+                    null
+                );
+            }
+        } else if (n.dir == null) {
+            if (n.meio instanceof No3) {
+                No3 meio = (No3) n.meio;
+                return new No3(
+                    n.chave1, n.valor1,
+                    meio.chave1, meio.valor1,
+                    n.esq,
+                    new No2(meio.chave2, meio.valor2, meio.esq, meio.meio),
+                    meio.dir
+                );
+            } else {
+                No2 meio = (No2) n.meio;
+                return new No2(
+                    n.chave2, n.valor2,
+                    new No3(n.chave1, n.valor1, meio.chave, meio.valor, n.esq, meio.esq, meio.dir),
+                    null
+                );
+            }
+        }
+    }
+    return no;
+}
+
+private NoBase getMinNode(NoBase no) {
+    if (no == null) return null;
+    if (no instanceof No2) {
+        No2 n = (No2) no;
+        if (n.esq == null) return n;
+        return getMinNode(n.esq);
+    } else {
+        No3 n = (No3) no;
+        if (n.esq == null) return n;
+        return getMinNode(n.esq);
+    }
+}
+        
+    }
+    
+
+
+Complexidade dos métodos: sendo h a altura da arvore
+vazia() - O(1) 
+get() - O(h) 
+put() - O(h)
+altura() - O(N) onde N é o número total de elementos na árvore
+mostra() - O(N) sendo N a quantidade de Nós
+delete() - O(h)
+deleteNo2() - O(h) 
+deleteNo3() - O(h) 
+balancear() - O(h)
+getMinNode() - O(h)

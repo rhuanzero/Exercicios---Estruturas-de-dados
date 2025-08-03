@@ -1,0 +1,12 @@
+1) Suponha que uma certa árvore binária de busca possui chaves que são inteiros entre 1 e
+10. Deseja-se então buscar pela chave igual a 5. Qual sequência abaixo não pode
+corresponder à sequência de chaves examinadas na busca pela chave de número 5?
+a. 10, 9, 8, 7, 6, 5
+b. 4, 10, 8, 7, 5
+c. 1, 10, 2, 9, 3, 8, 4, 7, 6, 5
+d. 2, 7, 3, 8, 4, 5
+e. 1, 2, 10, 4, 8, 5
+
+
+
+R: a sequencia d. 2, 7, 3, 8, 4, 5 não corresponde a sequencia de chaves examinadas na busca pela chave de numero 5 por conta de que no trecho em que se encontra a chave '8' ela deveria ser menor que '7' e maior que '3'.

@@ -1,0 +1,25 @@
+    /*1) Dadas duas listas duplamente encadeadas L1 e L2, sem elementos repetidos, implemente
+um método estático que realize a interseção das duas listas, criando uma terceira lista L3
+contendo a interseção entre as duas listas.*/
+
+    public static ListaDuplamente juntarListas(ListaDuplamente l1, ListaDuplamente l2){
+        ListaDuplamente l3 = new ListaDuplamente();
+        Elo p1,p2;
+
+        for (p1 = l1.prim;p1!=null; p1 = p1.prox){ // O (N)
+            for (p2 = l2.prim;p2!=null; p2 = p2.prox){ // O (M)
+                if (p1.dado == p2.dado){
+                    Elo p = new Elo(p1.dado);
+                    if(l3.prim==null){ // Caso Base
+                        l3.prim = p;
+                    }
+                    else{ // Caso Geral
+                        p.prox = l3.prim;
+                        l3.prim.ant = p;
+                        l3.prim = p;
+                    }
+                }
+            }
+        }
+
+Complexidade O(N*M), sendo N o tamanho de l1 e M o tamanho de l2.

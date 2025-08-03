@@ -1,0 +1,227 @@
+package listaSingular;
+/*3) Implemente uma lista ordenada genérica (usando Generics de Java) que armazene nomes
+em ordem alfabética. Lembre-se de manter a prioridade de ordenação da lista nos métodos
+implementados. Para cada método, diga a sua complexidade.*/
+
+public class ListaGenerica <T extends Comparable<T>>
+{
+	/* Refer�ncia para primeiro elemento */
+	protected Elo prim;
+
+	protected class Elo
+	{
+		protected T dado;
+		protected Elo prox;
+
+		public Elo()
+		{
+			prox = null;
+		}
+
+		public Elo(T elem)
+		{
+			dado = elem;
+			prox = null;
+		}
+
+		public Elo(T elem, Elo proxElem)
+		{
+			dado = elem;
+			prox = proxElem;
+		}
+	}
+
+	public ListaGenerica()
+	{
+		prim = null;
+	}
+	
+	/* Testa se a lista est� vazia. */
+	public boolean vazia()
+	{
+		return prim == null;
+	}
+	
+	/* Insere elemento no in�cio da lista. */
+	public void insere(T novo)
+	{
+		Elo p = new Elo(novo);
+		p.prox = prim;
+		prim = p;
+	}
+	
+	/* Verifica se um determinado elemento est� na lista. */
+	public boolean busca(T elem)
+	{
+		Elo p;
+		
+		for(p = prim; p != null; p = p.prox)
+		{
+			if(p.dado.equals(elem))
+				return true;
+		}
+		
+		return false;
+	}
+	
+	/* Implementa��o recursiva do m�todo de busca. */
+	public boolean buscaRecursiva(T elem)
+	{
+		if(this.vazia())
+			return false;
+		
+		return buscaRecursiva(elem, prim);
+	}
+	
+	private boolean buscaRecursiva(T elem, Elo p)
+	{
+		if(p == null)
+			return false;
+		
+		if(p.dado.equals(elem))
+			return true;
+		
+		return buscaRecursiva(elem, p.prox);
+	}
+
+	/* Remove da lista o primeiro elemento com valor igual a �elem". Ret. true se removeu. */
+	public boolean remove(T elem)
+	{
+		Elo p;
+		Elo ant = null; /* Refer�ncia para anterior. */
+		
+		for(p = prim; ((p != null) && !(p.dado.equals(elem))); p = p.prox)
+			ant = p;
+		
+		/* Se p � null, ent�o n�o encontrou elemento. */
+		if (p == null)
+			return false;
+		
+		if (p == prim)
+			prim = prim.prox; /* Remove elemento do in�cio. */
+		else
+			ant.prox = p.prox;  /* Remove elemento do meio. */
+		
+		/* Remove a �ltima refer�ncia para o elo a ser removido. Dessa forma,
+		 * o Garbage Collector ir� liberar essa mem�ria. */
+		p = null;
+		
+		return true;
+	}
+	
+	/* Imprime todos os elementos da lista. */
+	public void imprime()
+	{
+		Elo p;
+		
+		System.out.println("Elementos da lista:");
+		
+		for(p = prim; p != null; p = p.prox)
+		{
+			System.out.print(p.dado + " ");
+		}
+		
+		System.out.println();
+	}
+}
+
+public class ListaOrdenadaGenerica <T extends Comparable<T>> extends ListaGenerica<T>
+{
+	/* Insere elemento na lista na posi��o adequada, mantendo-a ordenada. */
+	public void insere(T novo)
+	{
+		Elo p, q;
+		Elo ant = null;
+
+		q = new Elo(novo);
+
+		for (p = prim; ((p != null) && (p.dado.compareTo(novo) < 0)); p = p.prox) // O(n)
+			ant = p;
+
+		if (ant == null)
+			prim = q;
+		else
+			ant.prox = q;
+
+		q.prox = p;
+	}
+
+	/* Remove da lista o primeiro elemento com valor igual a �elem". Ret. true se removeu. */
+	public boolean remove(T elem)
+	{
+		Elo p;
+		Elo ant = null; /* refer�ncia para anterior */
+
+		for(p = prim; ((p != null) && (p.dado.compareTo(elem)<0)); p = p.prox) // O(n)
+			ant = p;
+
+		/* Se p � null ou p.dado != elem, ent�o n�o encontrou elemento. */
+		if ((p == null) || (p.dado != elem))
+			return false;
+
+		if (p == prim)
+			prim = prim.prox; /* Remove elemento do in�cio. */
+		else
+			ant.prox = p.prox;  /* Remove elemento do meio. */
+
+		/* Remove a �ltima refer�ncia para o elo a ser removido. Dessa forma,
+		 * o Garbage Collector ir� liberar essa mem�ria. */
+		p = null;
+
+		return true;
+	}
+
+	/* M�todo para intersecao de conjuntos. Calcula intersecao do conjunto com cj2 e retorna novo conjunto com a intersecao. 
+	 * Usa fato de conjuntos estarem ordenados e percorre as listas em paralelo. */
+	public int calculaElementosComuns(ListaOrdenadaGenerica lista2)
+	{
+		Elo p1 = prim;
+		Elo p2 = lista2.prim;
+		int total = 0;
+
+		while ( (p1 != null) && (p2 != null) ) // O(n)
+		{
+			if (p1.dado.compareTo(p2.dado) < 0)
+			{
+				p1 = p1.prox;
+			}
+			else if(p1.dado.compareTo(p2.dado) > 0)
+			{
+				p2 = p2.prox;
+			}
+			else
+			{
+				total++;
+				
+				p1 = p1.prox;
+				p2 = p2.prox;
+			}
+		}
+
+		return total;
+	}
+
+}
+
+
+
+Complexidade dos metodos da classe ListaGenerica:
+
+vazia() - O(1)
+insere() - O(1)
+busca() - O(n)
+buscaRecursiva() - O(n)
+remove() - O(n)
+imprime - O(n)
+
+Complexidade dos metodos da classe ListaOrdenadaGenerica:
+
+insere() - O(n)
+remove() - O(n)
+calculaElementosComuns() - O(n)
+
+O metodo compareTo() possui complexidade O(n)
+Todos os metodos com com complexidade O(n), percorrem o vetor inteiro, no pior dos casos, para o determinado fim de cada um.
+
+
+

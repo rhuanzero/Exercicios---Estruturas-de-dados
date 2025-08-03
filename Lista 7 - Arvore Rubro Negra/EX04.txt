@@ -1,0 +1,55 @@
+4) Modifique a implementação de árvore rubro-negra vista em aula para permitir que o método
+get possa obter o último nó acessado da árvore (inserido ou recuperado através do próprio
+get) em tempo constante, isto é, O(1).
+
+Atributo adicionado a classe:
+private Node last;
+
+Métodos modificados:
+
+ public Node get(Key key) {
+        if (key == null) throw new IllegalArgumentException("argument to get() is null");
+        if(last!=null && key.equals(last.key))
+    		return last;
+        
+        return get(root, key);
+    }
+
+    private Node get(Node x, Key key) {
+        while (x != null) {
+            int cmp = key.compareTo(x.key);
+            if      (cmp < 0) x = x.left;
+            else if (cmp > 0) x = x.right;
+            else {
+		   this.last = x;	
+            	   return x;
+		}
+        }
+        return null;
+    }
+
+ private Node put(Node h, Key key, Value val) {
+        if (h == null) {
+                Node new = new Node(key, val, RED, 1)
+		this.last = new;
+		return new;
+	}
+        int cmp = key.compareTo(h.key);
+        if      (cmp < 0) h.left  = put(h.left,  key, val);
+        else if (cmp > 0) h.right = put(h.right, key, val);
+        else{           
+             h.val   = val;
+	     this.last = h; // Atualiza o valor do ultimo   
+        }
+
+        // fix-up any right-leaning links
+        if (isRed(h.right) && !isRed(h.left))      h = rotateLeft(h);
+        if (isRed(h.left)  &&  isRed(h.left.left)) h = rotateRight(h);
+        if (isRed(h.left)  &&  isRed(h.right))     flipColors(h);
+        h.size = size(h.left) + size(h.right) + 1;
+        
+        return h;
+    }
+
+
+Complexidade dos métodos: O(logn) - sendo n, o numero total de nós na arvore.

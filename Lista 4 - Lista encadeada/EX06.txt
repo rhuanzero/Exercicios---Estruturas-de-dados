@@ -1,0 +1,220 @@
+6) Um diretório é uma lista de arquivos e outros diretórios. Assim sendo, crie um programa
+que receba o nome de um diretório e imprima o nome de todos os arquivos e outros diretórios
+contidos naquele, de modo que o conteúdo de cada diretório seja recursivamente listado (de
+forma indentada) sob o nome do diretório pai. Considere o seguinte exemplo:
+	Jogos
+		Campo Minado
+		Paciência
+		World of Warcraft
+	Faculdade
+		EDD1
+		EDD2
+		AA
+		ACEs
+			ACE1
+			ACE2
+			ACE3
+		TPD
+	Filmes
+		Super-heróicos
+			Marvel
+				Vingadores
+				Homem-Aranha
+			DC
+				Superman
+		Drama
+			Brilho Eterno de Uma Mente Sem Lembranças
+		Comédias Românticas
+			(Pasta Vazia)
+Dicas:
+	 A estrutura de pastas pode ser hard-coded no código do seu programa.
+	Pode ser usada a estrutura exemplificada acima ou qualquer outra que
+	cubra os mesmos casos;
+	 A classe de lista encadeada usada não pode ser de inteiros como a classe
+	básica Lista vista em sala de aula. Crie uma nova versão da classe ou a
+	modifique usando Generics (ambas versões serão aceitas). As listas
+	devem ser do tipo das classes que vocês criarem para modelar as
+	entidades descritas no enunciado; e
+	 O bom uso de herança ou de uma interface facilita a construção e
+	impressão da estrutura de pastas.
+	Seu programa deve ter apenas um comando System.out.println(diretorio)
+	para produzir a saída esperada.
+
+
+
+
+public interface SistemaArquivo extends Comparable<SistemaArquivo> {
+    String getNome();
+    String toStringIdentado(int identacao);
+}
+
+public class Arquivo implements SistemaArquivo{
+    private String nome;
+
+    public Arquivo(String nome){
+        this.nome = nome;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String toStringIdentado(int identacao){
+        StringBuilder str = new StringBuilder();
+        for(int i=0; i<identacao; i++){
+            str.append("\t");
+        }
+        str.append(this.nome);
+        return str.toString();
+    }
+
+
+    public int compareTo(SistemaArquivo outroSistemaArquivo){
+        return this.nome.compareTo(outroSistemaArquivo.getNome());
+    }
+}
+
+
+public class Diretorio implements SistemaArquivo{
+    private String nome;
+    private ListaGenerica<SistemaArquivo> paths;
+
+    public Diretorio(String nome) {
+        this.nome = nome;
+        this.paths = new ListaGenerica<>();
+    }
+
+    public void adiciona(SistemaArquivo conteudo) {
+        this.paths.insere(conteudo);
+    }
+
+    public String getNome() {
+        return this.nome;
+    }
+
+    public String toStringIdentado(int identacao){
+        StringBuilder str = new StringBuilder();
+
+        for(int i = 0; i<identacao; i++){
+            str.append("\t");
+        }
+        str.append(this.nome).append("\n");
+
+        ListaGenerica.Elo atual = paths.prim;
+
+        while(atual != null){
+            SistemaArquivo item = (SistemaArquivo) atual.dado;
+            str.append(item.toStringIdentado(identacao+1));
+
+            if(atual.prox != null){
+                str.append("\n");
+            }else{
+                if(item instanceof Diretorio){
+                    str.append("\n");
+                }
+            }
+            atual = atual.prox;
+        }
+        if(str.length() > 0 && str.charAt(str.length()-1) == '\n'){
+
+        }
+        return str.toString();
+    }
+
+    public String toString() {
+        return toStringIdentado(0);
+    }
+
+    public int compareTo(SistemaArquivo outra) {
+        return this.nome.compareTo(outra.getNome());
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        Diretorio jogos = new Diretorio("Jogos");
+        jogos.adiciona(new Arquivo("World of Warcraft"));
+        jogos.adiciona(new Arquivo("Paciência"));
+        jogos.adiciona(new Arquivo("Campo Minado"));
+
+
+        Diretorio faculdade = new Diretorio("Faculdade");
+        faculdade.adiciona(new Arquivo("TPD"));
+
+        Diretorio aces = new Diretorio("ACEs");
+        aces.adiciona(new Arquivo("ACE3"));
+        aces.adiciona(new Arquivo("ACE2"));
+        aces.adiciona(new Arquivo("ACE1"));
+        faculdade.adiciona(aces);
+
+        faculdade.adiciona(new Arquivo("AA"));
+        faculdade.adiciona(new Arquivo("EDD2"));
+        faculdade.adiciona(new Arquivo("EDD1"));
+
+        Diretorio filmes = new Diretorio("Filmes");
+
+        Diretorio comediasRomanticas = new Diretorio("Comédias Românticas");
+
+        filmes.adiciona(comediasRomanticas);
+
+        Diretorio drama = new Diretorio("Drama");
+        drama.adiciona(new Arquivo("Brilho Eterno de Uma Mente Sem Lembranças"));
+        filmes.adiciona(drama);
+
+        Diretorio superHeroicos = new Diretorio("Super-heróicos");
+        Diretorio dc = new Diretorio("DC");
+        dc.adiciona(new Arquivo("Superman"));
+        superHeroicos.adiciona(dc);
+
+        Diretorio marvel = new Diretorio("Marvel");
+        marvel.adiciona(new Arquivo("Homem-Aranha"));
+        marvel.adiciona(new Arquivo("Vingadores"));
+        superHeroicos.adiciona(marvel);
+        filmes.adiciona(superHeroicos);
+
+        Diretorio raizSistema = new Diretorio("Sistema de Arquivos");
+        raizSistema.adiciona(filmes);
+        raizSistema.adiciona(faculdade);
+        raizSistema.adiciona(jogos);
+
+        System.out.println(raizSistema);
+    }
+}
+
+
+Lista genérica foi utilizada nesse exercício.
+
+Complexidade dos métodos:
+
+Classe Arquivo:
+toStringIdentado(int identacao) - O(n) - n sendo int identaçao
+compareTo() - O(n) - n == Comprimento da String
+
+
+Classe Diretorio:
+adiciona() - O(1)
+toStringIdentado(int identacao) - O(n) - Numero total de itens(arquivos e subdiretórios) 
+toString() - O(n) - Chama o método toStringIdentado()
+compareTo(SistemaArquivo outra) - O(n) - Comprimento da String do nome
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

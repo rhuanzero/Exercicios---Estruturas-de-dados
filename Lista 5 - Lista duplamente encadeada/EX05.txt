@@ -1,0 +1,57 @@
+/*5) Para a classe ListaDuplamente, crie um método que use recursão para verificar se a
+lista corrente, isto é, para a qual o método é chamado, é igual a uma lista lista2 passada
+como parâmetro. Note que você pode criar um ou mais métodos auxiliares. O método deve
+obedecer ao seguinte protótipo:*/
+
+    public boolean verificaIgualdade(ListaDuplamente lista2){
+        if(!tamIgualdade(this, lista2)){
+            return false;
+        }
+        Elo p1 = this.prim;
+        Elo p2 = lista2.prim;
+
+        return verificaIgualdade(p1,p2);
+    }
+
+    private boolean verificaIgualdade(Elo p1, Elo p2){
+        if(p1 == null && p2==null){
+            return true;
+        }
+        if (p1.dado!=p2.dado)
+            return false;
+        return verificaIgualdade(p1.prox,p2.prox);
+
+    }
+
+    private boolean tamIgualdade(ListaDuplamente l1, ListaDuplamente l2){
+        return tam(l1) == tam(l2);
+    };
+    
+    private int tam(ListaDuplamente l1)
+    {
+        if(l1.vazia())
+            return 0;
+
+        return tam2(l1.prim);
+    }
+
+    private int tam2(Elo p)
+    {
+        if(p == null)
+            return 0;
+
+        return 1 + tam2(p.prox);
+    }
+
+
+Complexidade dos métodos:
+tam2() - O(n) - método recursivo auxiliar para verificar o tamanho da lista
+tam() - O(n) - método que retorna o tamanho da lista (n)
+tamIgualdade() - O(n+m) - chama os dois métodos (tam) e faz a comparação
+verificaIgualdade(Elo p1, Elo p2) - O(n) - Sendo n a lista mais curta
+verificaIgualdade(ListaDuplamente lista2) - O(n) Sendo n o tamanho de ambas as listas (apenas executa se os tamanhos forem iguais)
+
+
+
+
+

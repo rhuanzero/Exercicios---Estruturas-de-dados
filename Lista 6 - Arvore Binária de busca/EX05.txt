@@ -1,0 +1,51 @@
+	5) Implemente um método que, dados parâmetros Chave chaveMin e Chave chaveMax,
+	remova de uma árvore binária de busca todos os nós cujas chaves não estão contidas nointervalo [chaveMin, chaveMax]. 
+	O método deve retornar true caso tenha sido possível
+	remover ao menos um nó e false, caso contrário. Você deve implementar o método com a
+	melhor complexidade possível e deve utilizar o protótipo abaixo:
+	public boolean removeForaIntervalo(Chave chaveMin, Chave chaveMax);
+    
+    public boolean removeForaIntervalo(Chave chaveMin, Chave chaveMax) {
+    	if(chaveMin == null || chaveMax == null) {
+    		throw new IllegalArgumentException("Insira chaves válidas! (Não nulas)");
+    	}
+    	if(chaveMin.compareTo(chaveMax)>0) {
+    		throw new IllegalArgumentException("Chave minima deve ser menor que a chave maxima!");
+    	}
+    	
+    	boolean[] removeu = new boolean[] {false};
+    	raiz = removeForaIntervalo(raiz, chaveMin,  chaveMax, removeu);
+    	return removeu[0];
+    }
+    
+    
+    private No removeForaIntervalo(No x,Chave chaveMin, Chave chaveMax, boolean[] removeu) {
+    	
+    	if(x==null) {
+    		return x;
+    	}
+    	
+    	int cmpMin = x.chave.compareTo(chaveMin);
+    	int cmpMax = x.chave.compareTo(chaveMax);
+    	
+    	
+    	if(cmpMin <0) {
+    		removeu[0] = true;
+    		return removeForaIntervalo(x.dir,chaveMin,chaveMax, removeu);
+    	}
+    	
+    	
+    	if(cmpMax >0) {
+    		removeu[0] = true;
+    		return removeForaIntervalo(x.esq,chaveMin,chaveMax,removeu);
+    	}
+
+    	
+    	x.esq = removeForaIntervalo(x.esq , chaveMin,chaveMax,removeu);
+    	x.dir = removeForaIntervalo(x.dir , chaveMin,chaveMax,removeu);
+    	
+    	
+    	return x;
+    }
+
+Complexidade dos métodos: O(n) - sendo n a quantidade de nós da arvore 

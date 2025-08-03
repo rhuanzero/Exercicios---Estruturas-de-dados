@@ -1,0 +1,61 @@
+4) Mostre o conteúdo de uma tabela hash que segue a abordagem linear-probing quando se
+inserem as chaves E A S Y Q U T I O N, nessa ordem, em uma tabela inicialmente vazia de
+tamanho inicial M = 4 que é expandida pelo dobro do seu tamanho quando está cheia pela
+metade. Utilize a função de hash (11 * k) % M para transformar a k-ésima letra do alfabeto
+em um índice da tabela.
+
+
+
+ public static void main(String[] args) {
+            LinearProbingHashST<Character, Integer> st = new LinearProbingHashST<>(4);
+            String entrada = "EASYQUTION";
+            
+            for (char c : entrada.toCharArray()) {
+                st.put(c, (int) c);
+            }
+        }
+
+     private int hash(Key key) {
+            if (key instanceof Character) {
+                char c = (Character) key;
+                int k = Character.toUpperCase(c) - 'A' + 1;
+                return (11 * k) % m;
+            }
+            return (key.hashCode() & 0x7fffffff) % m;
+        }
+
+SAIDA:
+
+ 0: null
+ 1: null
+ 2: null
+ 3: I -> 73
+ 4: null
+ 5: O -> 79
+ 6: null
+ 7: U -> 85
+ 8: null
+ 9: null
+10: null
+11: A -> 65
+12: null
+13: null
+14: null
+15: null
+16: null
+17: S -> 83
+18: null
+19: Y -> 89
+20: null
+21: null
+22: null
+23: E -> 69
+24: null
+25: null
+26: N -> 78
+27: Q -> 81
+28: T -> 84
+29: null
+30: null
+31: null
+

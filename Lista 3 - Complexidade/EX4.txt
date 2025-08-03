@@ -1,0 +1,49 @@
+4) Implemente um método com a melhor complexidade possível para conseguir a quantidade de inteiros pares de uma pilha. Use a classe Pilha aprendida em sala de aula que possui os
+métodos pop e push padrões, além de atributos padrões. Você possui liberdade para criar
+novos métodos e/ou atributos e alterar os métodos pop e push já existentes.
+
+Atributo adicionado: private int pares;
+Métodos adaptados: push() e pop()
+
+public boolean push(int elemento){
+        if (!this.cheia())
+        {
+            if (elemento % 2==0){
+                pares++; // Incrementa o número de pares // O(1)
+            }
+            vetor[++topo] = elemento;
+            return true;
+        }
+        else
+        {
+            //Impressão para fins didáticos
+            System.out.println("Pilha cheia: push não funcionou.\n");
+            return false;
+        }
+    }
+
+public int pop(){
+        int c = Integer.MIN_VALUE;
+
+        if (!this.vazia())
+        {
+            c = vetor[topo];
+            if (c % 2==0){
+                pares--; // Decrementa o número de pares, se for um número par. O(1)
+            }
+            topo--; //Decrementando o topo, o elemento   "removido"
+
+        }
+        else
+        {
+            //Impressão para fins didáticos
+            System.out.println("Pilha vazia: pop não funcionou.");
+        }
+        return c;
+    }
+
+public int contarPares(){ // Retorna o numero de Pares
+       return pares; // O(1)
+    }
+
+Além dos atributos citados, adaptei a Pilha para receber números inteiros, podendo assim aceitar números maiores que 9 para a contagem dos pares.Sendo assim, o método contarPares() possui complexidade O(1).

@@ -1,0 +1,13 @@
+1) Defina o conceito de Heap e dê um exemplo de uma Heap.
+
+É uma arvore binaria completa que também é uma fila de prioridade representada por um vetor, em que o índice 0 é ignorado e se utiliza os maiores que 0 sendo que para identificar os filhos a partir de um índice i podemos dizer que o filho esquerdo = 2i e o filho direito = 2i+1, e o pai no i/2, no caso de uma heapmaxima o nó raiz sempre será maior ou igual ao seus filhos e para o caso da heap mínima o nó raiz sempre será menor ou igual ao seus filhos, essa estrutura é necessária para para o uso do heap-sort, que é um algoritmo de ordenação crescente (seja na máxima ou na mínima) em que o nó raiz é colocado no final do array e desconsiderado do vetor, esse processo é repetido diversas vezes até em que no final se obtém um vetor ordenado.
+
+exemplo de uma min-heap sendo uma fila de processos em um SO: [null, init(P1), sshd(P2), browser(P3), backup(P4), logger(P1), update(P4)]
+
+						    Índices:    0       1         2           3           4          5           6
+ 	
+	                 [1: init (P1)]
+                         /           \
+              [2: sshd (P2)]        [3: browser (P3)]
+                /       \               /
+    [4: backup (P4)] [5: logger (P1)] [6: update (P4)]

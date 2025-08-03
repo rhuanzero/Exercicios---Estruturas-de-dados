@@ -1,0 +1,26 @@
+	/*4) Duas árvores binárias de busca são similares se: as duas são vazias ou as duas não são
+vazias, e se suas subárvores da esquerda são similares e se suas subárvores da direita são
+também similares. Dessa forma, implemente um método de seguinte protótipo para
+determinar se uma árvore passada como parâmetro é similar à árvore corrente:
+public boolean eSimilar(ArvBinBusca<T> arvore);*/
+
+	public boolean eSimilar(ArvBinBusca<T> arvore) {
+		return eSimilar(raiz, arvore.raiz);
+	}
+	
+	private boolean eSimilar(No x, No y) {
+		
+		if(x == null && y ==null) 
+			return true;
+	
+		else {
+			if (x == null || y == null)
+				return false;
+		}
+		
+		return eSimilar(x.esq,y.esq) && eSimilar(x.dir,y.dir);
+	}
+	
+
+Complexidade dos métodos -
+eSimilar() - O(n) sendo n o numero de nós da arvore com menos nós.
